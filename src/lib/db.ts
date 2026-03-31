@@ -115,6 +115,17 @@ function normalizeDraft(row: any): Draft {
   }
 }
 
+export function getStats() {
+  const db = getDb()
+  const created24h = (db.prepare(
+    `SELECT COUNT(*) as count FROM drafts WHERE created_at >= datetime('now', '-24 hours')`
+  ).get() as any).count
+  const totalFinished = (db.prepare(
+    `SELECT COUNT(*) as count FROM drafts WHERE status = 'finished'`
+  ).get() as any).count
+  return { created24h, totalFinished }
+}
+
 export function cleanupOldDrafts(olderThanHours = 24): number {
   const result = getDb().prepare(
     `DELETE FROM drafts WHERE created_at < datetime('now', '-' || ? || ' hours')`

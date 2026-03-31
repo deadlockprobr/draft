@@ -7,7 +7,7 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { initDb, createDraft, getDraftById, getDraftByCodeUrl, getDraftByAdminCode, updateDraft, cleanupOldDrafts } from './src/lib/db'
 import { random, isDraftFinished, getCurrentStep } from './src/lib/draft'
-import { setIO, handleConnection, broadcastDraft, startTimer, clearTimer, clearPendingSelection, sendWebhook, acquireLock, releaseLock } from './src/lib/ws-state'
+import { setIO, handleConnection, broadcastDraft, startTimer, clearTimer, clearPendingSelection, sendWebhook, acquireLock, releaseLock, startStatsLoop } from './src/lib/ws-state'
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = parseInt(process.env.PORT || '3000', 10)
@@ -279,6 +279,7 @@ app.prepare().then(() => {
   setIO(io)
 
   io.on('connection', handleConnection)
+  startStatsLoop()
 
   // Cleanup old drafts once a week (drafts older than 2 months)
   const TWO_MONTHS_HOURS = 60 * 24 * 2

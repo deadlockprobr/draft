@@ -1,5 +1,5 @@
 import type { Server, Socket } from 'socket.io'
-import { getDraftById, getDraftByCodeUrl, updateDraft } from './db'
+import { getDraftById, getDraftByCodeUrl, updateDraft, getStats } from './db'
 import { isDraftFinished, getCurrentStep, parseSortString, HEROES_API_URL, type Draft } from './draft'
 
 // --- Webhook ---
@@ -208,8 +208,68 @@ function broadcastTimer(codeUrl: string, remaining: number) {
   io.to(codeUrl).emit('draft:timer', { remaining })
 }
 
+// --- Stats ---
+export interface SiteStats {
+  created24h: number
+  totalFinished: number
+  usersOnline: number
+}
+
+let cachedStats: SiteStats = { created24h: 0, totalFinished: 0, usersOnline: 0 }
+const connectedIps = new Set<string>()
+const socketIpMap = new Map<string, string>()
+
+function refreshStats() {
+  try {
+    const dbStats = getStats()
+    cachedStats = { ...dbStats, usersOnline: connectedIps.size }
+  } catch {}
+}
+
+export function getCachedStats(): SiteStats {
+  return cachedStats
+}
+
+export function startStatsLoop() {
+  refreshStats()
+  setInterval(() => {
+    refreshStats()
+    if (io) {
+      io.emit('stats', cachedStats)
+    }
+  }, 30_000)
+}
+
+function getSocketIp(socket: Socket): string {
+  return (socket.handshake.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
+    || socket.handshake.address
+    || 'unknown'
+}
+
 // --- Connection handler ---
 export function handleConnection(socket: Socket) {
+  // Track unique IPs
+  const ip = getSocketIp(socket)
+  connectedIps.add(ip)
+  socketIpMap.set(socket.id, ip)
+  cachedStats.usersOnline = connectedIps.size
+
+  // Send fresh stats to this socket
+  socket.emit('stats', cachedStats)
+
+  socket.on('disconnect', () => {
+    const disconnectedIp = socketIpMap.get(socket.id)
+    socketIpMap.delete(socket.id)
+    // Only remove IP if no other sockets from same IP
+    if (disconnectedIp) {
+      const stillConnected = Array.from(socketIpMap.values()).includes(disconnectedIp)
+      if (!stillConnected) {
+        connectedIps.delete(disconnectedIp)
+      }
+      cachedStats.usersOnline = connectedIps.size
+    }
+  })
+
   socket.on('select-hero', (data: { draftId: number; hero: { key: number; collection: string } | null }) => {
     if (data.hero) {
       setPendingSelection(data.draftId, data.hero)

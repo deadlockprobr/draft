@@ -69,5 +69,7 @@
   "links_est_duration": "Est. duration",
   "links_format": "Format",
   "links_link": "Link",
-  "links_obs_hint": "OBS Browser Source, chroma-key:"
+  "links_obs_hint": "OBS Browser Source, chroma-key:",
+
+  "stats_drafts_completed": "{count} drafts completed"
 }

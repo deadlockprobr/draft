@@ -69,5 +69,7 @@
   "links_est_duration": "Прим. длительность",
   "links_format": "Формат",
   "links_link": "Ссылка",
-  "links_obs_hint": "OBS Browser Source, хромакей:"
+  "links_obs_hint": "OBS Browser Source, хромакей:",
+
+  "stats_drafts_completed": "{count} драфтов проведено"
 }

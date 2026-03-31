@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { useI18n } from "@/i18n/context";
+import { useStats } from "@/hooks/use-stats";
 
 export default function HomePage() {
     const { t } = useI18n();
+    const stats = useStats();
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -87,6 +89,19 @@ export default function HomePage() {
                     >
                         deadlock.pro.br
                     </a>
+                    {stats && (stats.totalFinished > 0 || stats.usersOnline > 0) && (
+                        <div className="flex items-center gap-3">
+                            {stats.usersOnline > 0 && (
+                                <span className="flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                                    {stats.usersOnline} online
+                                </span>
+                            )}
+                            {stats.totalFinished > 0 && (
+                                <span>{t('stats_drafts_completed', { count: stats.totalFinished.toLocaleString() })}</span>
+                            )}
+                        </div>
+                    )}
                     <span>Open source</span>
                 </div>
             </footer>
