@@ -30,6 +30,9 @@ app.prepare().then(() => {
 
   const server = express()
 
+  // Trust proxy (behind reverse proxy/load balancer)
+  server.set('trust proxy', 1)
+
   // Security
   server.use(helmet({
     contentSecurityPolicy: false, // Next.js manages its own CSP

@@ -7,6 +7,7 @@ import { I18nProvider } from '@/i18n/context'
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000'),
   title: {
     default: 'Deadlock Draft - Pick & Ban Tool',
     template: '%s - Deadlock Draft',
