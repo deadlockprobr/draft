@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { SortChips } from '@/components/draft/sort-chips'
 import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 import { useI18n } from '@/i18n/context'
 import type { TranslationKey } from '@/i18n'
 
@@ -184,6 +185,7 @@ export default function SetupPage() {
         </div>
       </div>
       </div>
+      <Footer showStats />
     </div>
   )
 }

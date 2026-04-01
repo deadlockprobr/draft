@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useI18n } from '@/i18n/context'
 import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 import { SortChips } from '@/components/draft/sort-chips'
 import { parseSortSteps } from '@/lib/draft'
 
@@ -196,6 +197,7 @@ export default function LinksPage() {
           )}
         </div>
       </div>
+      <Footer showStats />
     </div>
   )
 }

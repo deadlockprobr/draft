@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 
 const SORT_FORMATS = [
   { name: 'Standard (4 bans)', value: 'a#-b#-a1-b2-a2-b1-b#-a#-b1-a2-b2-a1' },
@@ -305,15 +306,7 @@ const { data } = await res.json()
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="shrink-0 border-t border-border/50 py-4">
-        <div className="max-w-4xl mx-auto px-6 flex items-center justify-between text-xs text-muted-foreground">
-          <a href="https://deadlock.pro.br" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-            deadlock.pro.br
-          </a>
-          <span>Open source</span>
-        </div>
-      </footer>
+      <Footer showStats />
     </div>
   )
 }

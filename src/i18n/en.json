@@ -59,6 +59,7 @@
   "home_feature_api": "Public API",
   "home_feature_api_desc": "Integrate with your own tools. Create drafts, manage picks, and receive results via webhook.",
 
+  "nav_home": "Home",
   "nav_create": "Create Draft",
   "nav_api": "API",
 
