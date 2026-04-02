@@ -1,14 +1,17 @@
 import Database from 'better-sqlite3'
+import fs from 'fs'
 import path from 'path'
 import type { Draft } from './draft'
 
-const DB_PATH = path.resolve(process.cwd(), 'draft.db')
+const DATA_DIR = path.resolve(process.cwd(), 'data')
+const DB_PATH = path.join(DATA_DIR, 'draft.db')
 
 let db: Database.Database | null = null
 
 export function initDb(): Database.Database {
   if (db) return db
 
+  fs.mkdirSync(DATA_DIR, { recursive: true })
   db = new Database(DB_PATH)
   db.pragma('journal_mode = WAL')
 
