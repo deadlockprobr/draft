@@ -68,7 +68,7 @@ const { data } = await res.json()
 | `PORT` | `3000` | Server port |
 | `NODE_ENV` | `development` | Set to `production` for production |
 | `BASE_URL` | `http://localhost:3000` | Public base URL (used for cover URLs and webhooks) |
-| `NEXT_PUBLIC_HEROES_API_URL` | `https://assets.deadlock-api.com/v2/heroes` | Deadlock Heroes API endpoint |
+| `NEXT_PUBLIC_HEROES_API_URL` | `https://api.deadlock-api.com/v1/assets/heroes` | Deadlock Heroes API endpoint |
 
 ## Scripts
 

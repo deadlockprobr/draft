@@ -1,4 +1,4 @@
-export const HEROES_API_URL = process.env.NEXT_PUBLIC_HEROES_API_URL || 'https://assets.deadlock-api.com/v2/heroes'
+export const HEROES_API_URL = process.env.NEXT_PUBLIC_HEROES_API_URL || 'https://api.deadlock-api.com/v1/assets/heroes'
 
 export function random(length: number): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

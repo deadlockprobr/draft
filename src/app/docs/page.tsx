@@ -202,7 +202,7 @@ export default function DocsPage() {
               <p className="font-medium">Notes:</p>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                 <li>Items with <code className="px-1 py-0.5 rounded bg-secondary text-xs">auto: true</code> were auto-picked by the timer.</li>
-                <li>The <code className="px-1 py-0.5 rounded bg-secondary text-xs">hero.key</code> corresponds to the hero ID from the <a href="https://assets.deadlock-api.com/v2/heroes" target="_blank" className="underline">Deadlock Heroes API</a>.</li>
+                <li>The <code className="px-1 py-0.5 rounded bg-secondary text-xs">hero.key</code> corresponds to the hero ID from the <a href="https://api.deadlock-api.com/v1/assets/heroes" target="_blank" className="underline">Deadlock Heroes API</a>.</li>
                 <li>The webhook is fire-and-forget. If your server is down, the payload is not retried.</li>
               </ul>
             </div>
