@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 RUN corepack enable pnpm
 
 # --- Production deps only (with native bindings rebuilt) ---
