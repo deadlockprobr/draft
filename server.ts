@@ -16,6 +16,9 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 function getBaseUrl(req: express.Request): string {
+  // Prefer BASE_URL (same source as the webhook in ws-state.ts); fall back to
+  // request headers. Note: the public Next routes proxy here via localhost.
+  if (process.env.BASE_URL) return process.env.BASE_URL.replace(/\/+$/, '')
   const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http'
   const host = req.headers['x-forwarded-host'] || req.headers.host || `localhost:${port}`
   return `${proto}://${host}`
