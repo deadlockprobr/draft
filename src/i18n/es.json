@@ -12,6 +12,7 @@
   "ban": "Banear",
   "pick": "Elegir",
   "ban_label": "BAN",
+  "hero_locked": "Próximamente",
   "pick_label": "PICK",
   "search_hero": "Buscar héroe...",
   "draft_finished": "El draft ha finalizado.",

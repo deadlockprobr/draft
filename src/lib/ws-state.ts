@@ -1,6 +1,6 @@
 import type { Server, Socket } from 'socket.io'
 import { getDraftById, getDraftByCodeUrl, updateDraft, getStats } from './db'
-import { isDraftFinished, getCurrentStep, parseSortString, HEROES_API_URL, type Draft } from './draft'
+import { isDraftFinished, getCurrentStep, parseSortString, HEROES_API_URL, isHeroLocked, type Draft } from './draft'
 
 // --- Webhook ---
 export async function sendWebhook(draft: Draft) {
@@ -48,14 +48,21 @@ export function releaseLock(draftId: number) {
 
 // Hero pool loaded once for auto-pick
 let heroPool: { id: number; name: string }[] = []
+let lockedHeroIds = new Set<number>()
+
+export function isLockedHeroId(id: number): boolean {
+  return lockedHeroIds.has(id)
+}
 
 async function loadHeroPool() {
   try {
     const res = await fetch(HEROES_API_URL)
     const data = await res.json()
-    heroPool = (data ?? [])
-      .filter((h: any) => !h.disabled && !h.in_development)
+    const listed = (data ?? []).filter((h: any) => !h.disabled && !h.in_development)
+    heroPool = listed
+      .filter((h: any) => !isHeroLocked(h))
       .map((h: any) => ({ id: h.id, name: h.name }))
+    lockedHeroIds = new Set(listed.filter(isHeroLocked).map((h: any) => h.id))
     console.log(`[HEROES] Loaded ${heroPool.length} heroes for auto-pick`)
   } catch (err) {
     console.error('[HEROES] Failed to load hero pool:', err)

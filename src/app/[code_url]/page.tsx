@@ -6,7 +6,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useDraftWs } from "@/hooks/use-draft-ws";
 import { HeroCard } from "@/components/draft/hero-card";
 import { HeroRoulette } from "@/components/draft/hero-roulette";
-import { HEROES_API_URL } from "@/lib/draft";
+import { HEROES_API_URL, isHeroLocked } from "@/lib/draft";
 
 export default function StreamPage() {
     const params = useParams<{ code_url: string }>();
@@ -58,7 +58,7 @@ export default function StreamPage() {
         const usedIds = new Set(
             (draft?.items ?? []).map((i: any) => i?.hero?.key).filter(Boolean),
         );
-        return heroes.filter((h) => !usedIds.has(h.id));
+        return heroes.filter((h) => !usedIds.has(h.id) && !isHeroLocked(h));
     }, [heroes, draft?.items]);
 
     return (
