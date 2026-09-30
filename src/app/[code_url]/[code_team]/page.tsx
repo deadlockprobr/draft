@@ -6,9 +6,10 @@ import { useDraftWs } from "@/hooks/use-draft-ws";
 import { HeroCard, getHeroImageUrl } from "@/components/draft/hero-card";
 import { HeroRoulette } from "@/components/draft/hero-roulette";
 import { TimerDisplay } from "@/components/draft/timer-display";
-import { HEROES_API_URL } from "@/lib/draft";
+import { HEROES_API_URL, isHeroLocked } from "@/lib/draft";
 import { useI18n } from "@/i18n/context";
 import { LanguageDropdown } from "@/components/navbar";
+import { Lock } from "lucide-react";
 
 export default function TeamPage() {
     const params = useParams<{ code_url: string; code_team: string }>();
@@ -125,7 +126,7 @@ export default function TeamPage() {
     }, [selectedHero, draft?.id]);
 
     const availableHeroes = useMemo(() => {
-        return heroes.filter((h) => !usedHeroIds.has(h.id));
+        return heroes.filter((h) => !usedHeroIds.has(h.id) && !isHeroLocked(h));
     }, [heroes, usedHeroIds]);
 
     const filteredHeroes = useMemo(() => {
@@ -481,6 +482,8 @@ export default function TeamPage() {
                                 >
                                     {filteredHeroes.map((hero) => {
                                         const isUsed = usedHeroIds.has(hero.id);
+                                        const isLocked = isHeroLocked(hero);
+                                        const isUnavailable = isUsed || isLocked;
                                         const isSelected =
                                             selectedHero?.id === hero.id;
                                         const isDimmed =
@@ -496,7 +499,7 @@ export default function TeamPage() {
                                             >
                                                 <button
                                                     disabled={
-                                                        isUsed ||
+                                                        isUnavailable ||
                                                         !isMyTurn ||
                                                         actionLoading
                                                     }
@@ -507,13 +510,13 @@ export default function TeamPage() {
                                                             );
                                                             return;
                                                         }
-                                                        if (!isUsed)
+                                                        if (!isUnavailable)
                                                             setSelectedHero(
                                                                 hero,
                                                             );
                                                     }}
                                                     onMouseEnter={() => {
-                                                        if (isUsed || !isMyTurn)
+                                                        if (isUnavailable || !isMyTurn)
                                                             return;
                                                         const isBan =
                                                             currentStep?.type ===
@@ -533,7 +536,7 @@ export default function TeamPage() {
                                                         }
                                                     }}
                                                     className={`absolute inset-0 rounded-lg overflow-hidden transition-all duration-200 ${
-                                                        isUsed
+                                                        isUnavailable
                                                             ? `${isDimmed ? 'opacity-[0.08]' : 'opacity-20'} cursor-not-allowed grayscale`
                                                             : isSelected
                                                               ? "z-20 scale-[1.3] shadow-2xl shadow-black/60 brightness-110"
@@ -575,6 +578,14 @@ export default function TeamPage() {
                                                         />
                                                     )}
                                                 </button>
+                                                {isLocked && (
+                                                    <div
+                                                        className="absolute inset-0 flex items-center justify-center"
+                                                        title={t("hero_locked")}
+                                                    >
+                                                        <Lock className="size-5 text-white/80 drop-shadow" />
+                                                    </div>
+                                                )}
 
                                                 {/* Action buttons below selected hero */}
                                                 {isSelected &&

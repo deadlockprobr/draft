@@ -7,7 +7,7 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { initDb, createDraft, getDraftById, getDraftByCodeUrl, getDraftByAdminCode, updateDraft, cleanupOldDrafts } from './src/lib/db'
 import { random, isDraftFinished, getCurrentStep } from './src/lib/draft'
-import { setIO, handleConnection, broadcastDraft, startTimer, clearTimer, clearPendingSelection, sendWebhook, acquireLock, releaseLock, startStatsLoop } from './src/lib/ws-state'
+import { setIO, handleConnection, broadcastDraft, startTimer, clearTimer, clearPendingSelection, sendWebhook, acquireLock, releaseLock, startStatsLoop, isLockedHeroId } from './src/lib/ws-state'
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = parseInt(process.env.PORT || '3000', 10)
@@ -218,6 +218,7 @@ app.prepare().then(() => {
         if (!body.hero || typeof body.hero !== 'object' || typeof body.hero.key !== 'number') {
           return res.status(400).json({ error: 'hero must have a numeric key' })
         }
+        if (isLockedHeroId(body.hero.key)) return res.status(400).json({ error: 'Hero is not available yet' })
 
         if (!acquireLock(draftId)) return res.status(409).json({ error: 'Draft is being updated, try again' })
 

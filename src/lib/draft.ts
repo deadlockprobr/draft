@@ -1,5 +1,10 @@
 export const HEROES_API_URL = process.env.NEXT_PUBLIC_HEROES_API_URL || 'https://api.deadlock-api.com/v1/assets/heroes'
 
+// The API lists announced heroes (e.g. community vote candidates) before they are playable
+export function isHeroLocked(hero: { player_selectable?: boolean }): boolean {
+  return hero.player_selectable === false
+}
+
 export function random(length: number): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let s = ''
