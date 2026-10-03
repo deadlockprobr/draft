@@ -46,7 +46,7 @@ export function releaseLock(draftId: number) {
   draftLocks.delete(draftId)
 }
 
-// Hero pool loaded once for auto-pick
+// Hero pool for auto-pick
 let heroPool: { id: number; name: string }[] = []
 let lockedHeroIds = new Set<number>()
 
@@ -69,8 +69,11 @@ async function loadHeroPool() {
   }
 }
 
-// Load on startup
+// Announced heroes unlock while the server keeps running
+const HERO_POOL_REFRESH_MS = 10 * 60_000
+
 loadHeroPool()
+setInterval(loadHeroPool, HERO_POOL_REFRESH_MS)
 
 // --- Socket.IO server reference ---
 let io: Server | null = null
