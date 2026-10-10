@@ -6,7 +6,7 @@ import { useDraftWs } from "@/hooks/use-draft-ws";
 import { HeroCard, getHeroImageUrl } from "@/components/draft/hero-card";
 import { HeroRoulette } from "@/components/draft/hero-roulette";
 import { TimerDisplay } from "@/components/draft/timer-display";
-import { HEROES_API_URL, isHeroLocked } from "@/lib/draft";
+import { HEROES_API_URL, isHeroListed, isHeroLocked } from "@/lib/draft";
 import { useI18n } from "@/i18n/context";
 import { LanguageDropdown } from "@/components/navbar";
 import { Lock } from "lucide-react";
@@ -27,7 +27,7 @@ export default function TeamPage() {
             .then((data) =>
                 setHeroes(
                     (data ?? [])
-                        .filter((h: any) => !h.disabled && !h.in_development)
+                        .filter(isHeroListed)
                         .sort((a: any, b: any) => a.name.localeCompare(b.name)),
                 ),
             )

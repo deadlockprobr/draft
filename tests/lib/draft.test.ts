@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { random, parseSortString, parseSortSteps, parseSortVisual, isDraftFinished, getCurrentStep } from '../../src/lib/draft'
+import { random, parseSortString, parseSortSteps, parseSortVisual, isDraftFinished, getCurrentStep, isHeroListed } from '../../src/lib/draft'
 
 describe('random', () => {
   it('generates a string of the specified length', () => {
@@ -132,5 +132,20 @@ describe('getCurrentStep', () => {
   it('returns undefined when all steps filled', () => {
     const items = [{ hero: { key: 1 } }, { hero: { key: 2 } }]
     expect(getCurrentStep('a1-b1', items)).toBeUndefined()
+  })
+})
+
+describe('isHeroListed', () => {
+  it('lists a playable hero even if the API still flags it in development', () => {
+    expect(isHeroListed({ player_selectable: true, disabled: false, in_development: true })).toBe(true)
+  })
+
+  it('lists announced heroes so they render locked', () => {
+    expect(isHeroListed({ player_selectable: false, disabled: false, in_development: false })).toBe(true)
+  })
+
+  it('hides heroes that are disabled or in development and not playable', () => {
+    expect(isHeroListed({ player_selectable: false, disabled: true, in_development: true })).toBe(false)
+    expect(isHeroListed({ player_selectable: false, disabled: false, in_development: true })).toBe(false)
   })
 })
