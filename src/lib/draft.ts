@@ -5,6 +5,11 @@ export function isHeroLocked(hero: { player_selectable?: boolean }): boolean {
   return hero.player_selectable === false
 }
 
+// The API can keep `in_development` set on a hero that is already playable (Baba, Oct 2026)
+export function isHeroListed(hero: { player_selectable?: boolean; disabled?: boolean; in_development?: boolean }): boolean {
+  return hero.player_selectable === true || (!hero.disabled && !hero.in_development)
+}
+
 export function random(length: number): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let s = ''

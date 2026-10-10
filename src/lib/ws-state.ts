@@ -1,6 +1,6 @@
 import type { Server, Socket } from 'socket.io'
 import { getDraftById, getDraftByCodeUrl, updateDraft, getStats } from './db'
-import { isDraftFinished, getCurrentStep, parseSortString, HEROES_API_URL, isHeroLocked, type Draft } from './draft'
+import { isDraftFinished, getCurrentStep, parseSortString, HEROES_API_URL, isHeroListed, isHeroLocked, type Draft } from './draft'
 
 // --- Webhook ---
 export async function sendWebhook(draft: Draft) {
@@ -58,7 +58,7 @@ async function loadHeroPool() {
   try {
     const res = await fetch(HEROES_API_URL)
     const data = await res.json()
-    const listed = (data ?? []).filter((h: any) => !h.disabled && !h.in_development)
+    const listed = (data ?? []).filter(isHeroListed)
     heroPool = listed
       .filter((h: any) => !isHeroLocked(h))
       .map((h: any) => ({ id: h.id, name: h.name }))

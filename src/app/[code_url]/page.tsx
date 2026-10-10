@@ -6,7 +6,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useDraftWs } from "@/hooks/use-draft-ws";
 import { HeroCard } from "@/components/draft/hero-card";
 import { HeroRoulette } from "@/components/draft/hero-roulette";
-import { HEROES_API_URL, isHeroLocked } from "@/lib/draft";
+import { HEROES_API_URL, isHeroListed, isHeroLocked } from "@/lib/draft";
 
 export default function StreamPage() {
     const params = useParams<{ code_url: string }>();
@@ -26,11 +26,7 @@ export default function StreamPage() {
         fetch(HEROES_API_URL)
             .then((r) => r.json())
             .then((data) =>
-                setHeroes(
-                    (data ?? []).filter(
-                        (h: any) => !h.disabled && !h.in_development,
-                    ),
-                ),
+                setHeroes((data ?? []).filter(isHeroListed)),
             )
             .catch(() => {});
     }, []);
